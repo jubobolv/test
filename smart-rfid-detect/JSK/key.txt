@@ -1,0 +1,2 @@
+alias: smart_rfid
+passwd: smart_rfid

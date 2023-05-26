@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package commons.proto;
+
+option go_package = "/commons/proto";
+
+service Diggings {
+  rpc ExHeartBeat (GetRequest) returns (CommonResponse) {}
+  rpc FindDeviceInfoById (GetRequest) returns (DeviceInfoResponse) {}
+  rpc PageDevice (PostRequest) returns (DeviceInfoPageResponse) {}
+  rpc FindBuilderShift (GetRequest) returns (BuilderShiftResponse) {}
+  rpc SaveLoadingRecord (PostRequest) returns (CommonResponse) {}
+  rpc StreamExHeartBeat (stream StreamRequest) returns (stream StreamResponse) {}
+  rpc StreamExImage (stream StreamImageRequest) returns (StreamResponse) {}
+}
+
+//****************************************** Request *********************************************//
+
+message GetRequest {
+  string relativePath = 1;
+}
+
+message PostRequest {
+  string relativePath = 1;
+  string paramJSON = 2;
+}
+
+message StreamRequest {
+  int32 reqType = 1; // 0: heartbeat; 1: image
+  int32 rfidNo = 2;
+}
+
+message StreamImageRequest {
+  int32 rfidNo = 1;
+  string imagePath = 2;
+  bytes reqStream = 3;
+}
+
+//****************************************** Response *********************************************//
+
+message CommonResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+message StreamResponse {
+  int32 rspType = 1; // 0: heartbeat; 1: image
+  int32 rfidNo = 2;
+  string imagePath = 3;
+}
+
+//****************************************** DeviceInfo *********************************************//
+
+message DeviceInfoResponse {
+  int32 code = 1;
+  string message = 2;
+  DeviceInfoVo data = 3;
+}
+
+message DeviceInfoVo {
+  string carFrameNumber = 1;
+  string carNumber = 2;
+  int32 carType = 3;
+  string carTypeName = 4;
+  string carVolume = 5;
+  int32 delFlag = 6;
+  optional ExcavatorParamVo excavatorParam = 7;
+  string id = 8;
+  int32 ifLease = 9;
+  string optime = 10;
+  string remark = 11;
+  string rfidDeviceNumber = 12;
+  int32 subType = 13;
+  string subTypeName = 14;
+}
+
+message ExcavatorParamVo {
+  string exEntruckingMin = 1;
+  string exExpireMin = 2;
+  string exFreezeMin = 3;
+}
+
+message DeviceInfoPageVo {
+  int32 pages = 1;
+  int32 size = 2;
+  int32 total = 3;
+  repeated DeviceInfoVo records = 4;
+}
+
+message DeviceInfoPageResponse {
+  int32 code = 1;
+  string message = 2;
+  DeviceInfoPageVo data = 3;
+}
+
+//****************************************** BuilderShift *********************************************//
+
+message BuilderShiftResponse {
+  int32 code = 1;
+  string message = 2;
+  BuilderShiftVo data = 3;
+}
+
+message BuilderShiftVo {
+  string id = 1;
+  string optime = 2;
+  string dayStart = 3;
+  string dayEnd = 4;
+  string nightStart = 5;
+  string nightEnd = 6;
+  int32 newest = 7;
+  string shiftDate = 8;
+  int32 builderShift = 9;
+}
